@@ -1,8 +1,6 @@
 package fr.lernejo.navy_battle.server;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -10,33 +8,34 @@ import java.net.http.HttpResponse;
 
 class SimpleClientServerTest {
     SimpleClientServer client;
-    final SimpleHttpServer server1 = new SimpleHttpServer("9876");
-    final SimpleHttpServer server2 = new SimpleHttpServer("9886");
-    @BeforeEach
-    void setup() throws IOException {
+
+    @Test
+    void test_initialisation() throws IOException {
+        final SimpleHttpServer server2 = new SimpleHttpServer("9886");
+        server2.Start();
+        org.assertj.core.api.Assertions.assertThatNoException()
+            .isThrownBy(() -> client = new SimpleClientServer("9886", "http://localhost:9876"));
+        server2.Stop();
+    }
+    @Test
+    void test_sendRequest() throws IOException {
+        final SimpleHttpServer server1 = new SimpleHttpServer("9816");
+        final SimpleHttpServer server2 = new SimpleHttpServer("9886");
         server1.Start();
         server2.Start();
-    }
-    @AfterEach
-    void shutdown() {
+        client = new SimpleClientServer("9886", "http://localhost:9816");
+        HttpResponse<String> response = client.sendRequest();
+        Assertions.assertEquals(response.statusCode(), 202);
         server1.Stop();
         server2.Stop();
     }
     @Test
-    void test_initialisation() {
-        org.assertj.core.api.Assertions.assertThatNoException()
-            .isThrownBy(() -> client = new SimpleClientServer("9886", "http://localhost:9876"));
-    }
-    @Test
-    void test_sendRequest() {
-        client = new SimpleClientServer("9886", "http://localhost:9876");
-        HttpResponse<String> response = client.sendRequest();
-        Assertions.assertEquals(response.statusCode(), 202);
-    }
-    @Test
-    void test_wrong_url() {
+    void test_wrong_url() throws IOException {
+        final SimpleHttpServer server2 = new SimpleHttpServer("9566");
+        server2.Start();
         org.assertj.core.api.Assertions.assertThatIllegalArgumentException()
-            .isThrownBy(() -> client = new SimpleClientServer("9886", "http://wrong_url"));
+            .isThrownBy(() -> client = new SimpleClientServer("9566", "http://wrong_url"));
+        server2.Stop();
     }
     @Test
     void wrong_port() {
