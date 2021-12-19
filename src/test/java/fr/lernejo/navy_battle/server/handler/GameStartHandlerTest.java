@@ -58,8 +58,8 @@ class GameStartHandlerTest {
                 .sendAsync(request, HttpResponse.BodyHandlers.ofString());
             HttpResponse<String> response = completableFuture.join();
             server.Stop();
-            Assertions.assertEquals(response.statusCode(), 404);
-            Assertions.assertEquals(response.body(), "<h1>404 Not Found</h1>Wrong method for request");
+            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(404);
+            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("<h1>404 Not Found</h1>Wrong method for request");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,8 +80,8 @@ class GameStartHandlerTest {
                 .sendAsync(request, HttpResponse.BodyHandlers.ofString());
             HttpResponse<String> response = completableFuture.join();
             server.Stop();
-            Assertions.assertEquals(response.statusCode(), 400);
-            Assertions.assertEquals(response.body(), "<h1>400 Bad Content-Type</h1>");
+            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(400);
+            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("<h1>400 Bad Content-Type</h1>");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,8 +105,8 @@ class GameStartHandlerTest {
                 .sendAsync(request, HttpResponse.BodyHandlers.ofString());
             HttpResponse<String> response = completableFuture.join();
             server.Stop();
-            Assertions.assertEquals(response.statusCode(), 400);
-            Assertions.assertEquals(response.body(), "<h1>400 Bad Request</h1>");
+            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(400);
+            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("<h1>400 Bad Request</h1>");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,7 +130,7 @@ class GameStartHandlerTest {
                 .sendAsync(request, HttpResponse.BodyHandlers.ofString());
             HttpResponse<String> response = completableFuture.join();
             server.Stop();
-            Assertions.assertEquals(response.statusCode(), 202);
+            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(202);
             org.assertj.core.api.Assertions.assertThat(response.body()).contains("\"message\":\"May the fate be with you\",\"url\":\"http://localhost:9876\"");
         } catch (IOException e) {
             e.printStackTrace();

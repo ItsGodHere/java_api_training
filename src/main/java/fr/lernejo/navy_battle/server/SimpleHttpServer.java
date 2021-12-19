@@ -2,6 +2,7 @@ package fr.lernejo.navy_battle.server;
 
 import com.sun.net.httpserver.HttpServer;
 import fr.lernejo.navy_battle.server.handler.CallHandler;
+import fr.lernejo.navy_battle.server.handler.FireHandler;
 import fr.lernejo.navy_battle.server.handler.GameStartHandler;
 import fr.lernejo.navy_battle.server.handler.PingHandler;
 
@@ -32,6 +33,7 @@ public class SimpleHttpServer {
         server.setExecutor(Executors.newFixedThreadPool(1));
         this.contexts.add(new PingHandler());
         this.contexts.add((new GameStartHandler()));
+        this.contexts.add(new FireHandler());
         this.setupContexts();
         this.server.start();
     }

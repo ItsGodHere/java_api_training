@@ -32,4 +32,11 @@ public class JsonUtil {
         responseBody.put("message", message);
         return responseBody.toString();
     }
+
+    public String createFireRequestBody(String consequence, boolean isShipLeft) {
+        JSONObject responseBody = new JSONObject();
+        responseBody.put("consequence", consequence);
+        responseBody.put("shipLeft", isShipLeft);
+        return responseBody.toString();
+    }
 }

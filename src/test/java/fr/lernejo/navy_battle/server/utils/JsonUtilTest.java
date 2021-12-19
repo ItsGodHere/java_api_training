@@ -1,5 +1,7 @@
 package fr.lernejo.navy_battle.server.utils;
 
+import org.everit.json.schema.Schema;
+import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.junit.jupiter.api.Assertions;
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
@@ -33,4 +36,14 @@ class JsonUtilTest {
             new URL("http://localhost:9876"), "May the fate be with you")).isNotEmpty();
     }
 
+    @Test
+    void test_createFireResponseBody() throws FileNotFoundException {
+        JSONObject jsonSchema = new JSONObject(
+            new JSONTokener(new FileInputStream(
+                new File("src/main/resources/Fire.json").getAbsolutePath())));
+        String responseFire = (new JsonUtil().createFireRequestBody("sunk", true));
+        JSONObject jsonData = new JSONObject( new JSONTokener(responseFire) );
+        Schema schemaValidator = SchemaLoader.load(jsonSchema);
+        schemaValidator.validate(jsonData);
+    }
 }

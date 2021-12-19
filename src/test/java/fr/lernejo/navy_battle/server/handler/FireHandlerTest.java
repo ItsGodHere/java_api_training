@@ -11,32 +11,32 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
-class PingHandlerTest {
-    final PingHandler pingHandlerTest = new PingHandler();
+class FireHandlerTest {
+    final FireHandler fireHandlerTest = new FireHandler();
 
     @Test
     void testPingAssignedPath () {
-        Assertions.assertEquals("/ping", pingHandlerTest.getAssignedPath());
+        Assertions.assertEquals("/api/game/fire", fireHandlerTest.getAssignedPath());
     }
 
     @Test
     void testMethodAllowed_with_correct_method() {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:9876/ping"))
+            .uri(URI.create("http://localhost:9876/api/game/fire"))
             .header("Content-Type", "text/plain; charset=UTF-8")
             .GET()
             .build();
-        Assertions.assertTrue(pingHandlerTest.isMethodAllowed(request.method()));
+        Assertions.assertTrue(fireHandlerTest.isMethodAllowed(request.method()));
     }
 
     @Test
     void testMethodAllowed_with_wrong_method() {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:9876/ping"))
+            .uri(URI.create("http://localhost:9876/api/game/fire"))
             .header("Content-Type", "text/plain; charset=UTF-8")
             .POST(HttpRequest.BodyPublishers.ofString("test"))
             .build();
-        Assertions.assertFalse(pingHandlerTest.isMethodAllowed(request.method()));
+        Assertions.assertFalse(fireHandlerTest.isMethodAllowed(request.method()));
     }
 
     @Test
@@ -46,7 +46,7 @@ class PingHandlerTest {
             server.Start();
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9876/ping"))
+                .uri(URI.create("http://localhost:9876/api/game/fire?cell=A1"))
                 .header("Content-Type", "text/plain; charset=UTF-8")
                 .GET()
                 .build();
@@ -54,30 +54,8 @@ class PingHandlerTest {
                 .sendAsync(request, HttpResponse.BodyHandlers.ofString());
             HttpResponse<String> response = completableFuture.join();
             server.Stop();
-            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(200);
-            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("OK");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    void testPingHandler_with_wrong_path () {
-        try {
-            SimpleHttpServer server = new SimpleHttpServer("9876");
-            server.Start();
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9876/thisIsNotTheRightPath"))
-                .header("Content-Type", "text/plain; charset=UTF-8")
-                .GET()
-                .build();
-            CompletableFuture<HttpResponse<String>> completableFuture = client
-                .sendAsync(request, HttpResponse.BodyHandlers.ofString());
-            HttpResponse<String> response = completableFuture.join();
-            server.Stop();
-            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(404);
-            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("<h1>404 Not Found</h1>No context found for request");
+            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(202);
+            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("{\"consequence\":\"sunk\",\"shipLeft\":true}");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,7 +68,7 @@ class PingHandlerTest {
             server.Start();
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9876/ping"))
+                .uri(URI.create("http://localhost:9876/api/game/fire?cell=A1"))
                 .header("Content-Type", "text/plain; charset=UTF-8")
                 .POST(HttpRequest.BodyPublishers.ofString("test"))
                 .build();
