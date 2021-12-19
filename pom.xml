@@ -78,7 +78,7 @@
                 <version>2.1</version>
                 <executions>
                     <execution>
-                        <id>copy all dependencies needed</id>
+                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
@@ -101,7 +101,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>src/main/java/fr.lernejo.navy_battle.Launcher</mainClass>
+                            <mainClass>$fullqualified path to your main Class</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
