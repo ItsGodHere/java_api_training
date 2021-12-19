@@ -131,6 +131,7 @@ class GameStartHandlerTest {
             HttpResponse<String> response = completableFuture.join();
             server.Stop();
             Assertions.assertEquals(response.statusCode(), 202);
+            org.assertj.core.api.Assertions.assertThat(response.body()).contains("\"message\":\"May the fate be with you\",\"url\":\"http://localhost:9876\"");
         } catch (IOException e) {
             e.printStackTrace();
         }
