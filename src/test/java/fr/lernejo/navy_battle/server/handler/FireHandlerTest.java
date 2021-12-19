@@ -40,46 +40,39 @@ class FireHandlerTest {
     }
 
     @Test
-    void testPingHandler_with_correct_path () {
-        try {
-            SimpleHttpServer server = new SimpleHttpServer("9876");
-            server.Start();
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9876/api/game/fire?cell=A1"))
-                .header("Content-Type", "text/plain; charset=UTF-8")
-                .GET()
-                .build();
-            CompletableFuture<HttpResponse<String>> completableFuture = client
-                .sendAsync(request, HttpResponse.BodyHandlers.ofString());
-            HttpResponse<String> response = completableFuture.join();
-            server.Stop();
-            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(202);
-            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("{\"consequence\":\"sunk\",\"shipLeft\":true}");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    void testPingHandler_with_correct_path () throws IOException {
+        SimpleHttpServer server = new SimpleHttpServer("9822");
+        server.Start();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:9822/api/game/fire?cell=A1"))
+            .header("Content-Type", "text/plain; charset=UTF-8")
+            .GET()
+            .build();
+        CompletableFuture<HttpResponse<String>> completableFuture = client
+            .sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = completableFuture.join();
+        server.Stop();
+        org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(202);
+        org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("{\"consequence\":\"sunk\",\"shipLeft\":true}");
     }
 
     @Test
-    void testPingHandler_with_wrong_method () {
-        try {
-            SimpleHttpServer server = new SimpleHttpServer("9876");
-            server.Start();
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9876/api/game/fire?cell=A1"))
-                .header("Content-Type", "text/plain; charset=UTF-8")
-                .POST(HttpRequest.BodyPublishers.ofString("test"))
-                .build();
-            CompletableFuture<HttpResponse<String>> completableFuture = client
-                .sendAsync(request, HttpResponse.BodyHandlers.ofString());
-            HttpResponse<String> response = completableFuture.join();
-            server.Stop();
-            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(404);
-            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("<h1>404 Not Found</h1>Wrong method for request");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    void testPingHandler_with_wrong_method () throws IOException {
+        SimpleHttpServer server = new SimpleHttpServer("9922");
+        server.Start();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:9922/api/game/fire?cell=A1"))
+            .header("Content-Type", "text/plain; charset=UTF-8")
+            .POST(HttpRequest.BodyPublishers.ofString("test"))
+            .build();
+        CompletableFuture<HttpResponse<String>> completableFuture = client
+            .sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = completableFuture.join();
+        server.Stop();
+        org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(404);
+        org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("<h1>404 Not Found</h1>Wrong method for request");
     }
+
 }

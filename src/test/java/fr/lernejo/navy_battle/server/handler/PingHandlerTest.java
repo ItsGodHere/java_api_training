@@ -40,68 +40,56 @@ class PingHandlerTest {
     }
 
     @Test
-    void testPingHandler_with_correct_path () {
-        try {
-            SimpleHttpServer server = new SimpleHttpServer("9876");
-            server.Start();
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9876/ping"))
-                .header("Content-Type", "text/plain; charset=UTF-8")
-                .GET()
-                .build();
-            CompletableFuture<HttpResponse<String>> completableFuture = client
-                .sendAsync(request, HttpResponse.BodyHandlers.ofString());
-            HttpResponse<String> response = completableFuture.join();
-            server.Stop();
-            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(200);
-            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("OK");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    void testPingHandler() throws IOException {
+        SimpleHttpServer server = new SimpleHttpServer("9222");
+        server.Start();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:9222/ping"))
+            .header("Content-Type", "text/plain; charset=UTF-8")
+            .GET()
+            .build();
+        CompletableFuture<HttpResponse<String>> completableFuture = client
+            .sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = completableFuture.join();
+        server.Stop();
+        Assertions.assertEquals(response.statusCode(), 200);
+        Assertions.assertEquals(response.body(), "OK");
     }
 
     @Test
-    void testPingHandler_with_wrong_path () {
-        try {
-            SimpleHttpServer server = new SimpleHttpServer("9876");
-            server.Start();
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9876/thisIsNotTheRightPath"))
-                .header("Content-Type", "text/plain; charset=UTF-8")
-                .GET()
-                .build();
-            CompletableFuture<HttpResponse<String>> completableFuture = client
-                .sendAsync(request, HttpResponse.BodyHandlers.ofString());
-            HttpResponse<String> response = completableFuture.join();
-            server.Stop();
-            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(404);
-            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("<h1>404 Not Found</h1>No context found for request");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    void testPingHandler_with_wrong_path () throws IOException {
+        SimpleHttpServer server = new SimpleHttpServer("9422");
+        server.Start();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:9422/thisIsNotTheRightPath"))
+            .header("Content-Type", "text/plain; charset=UTF-8")
+            .GET()
+            .build();
+        CompletableFuture<HttpResponse<String>> completableFuture = client
+            .sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = completableFuture.join();
+        server.Stop();
+        Assertions.assertEquals(response.statusCode(), 404);
+        Assertions.assertEquals(response.body(), "<h1>404 Not Found</h1>No context found for request");
     }
 
     @Test
-    void testPingHandler_with_wrong_method () {
-        try {
-            SimpleHttpServer server = new SimpleHttpServer("9876");
-            server.Start();
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:9876/ping"))
-                .header("Content-Type", "text/plain; charset=UTF-8")
-                .POST(HttpRequest.BodyPublishers.ofString("test"))
-                .build();
-            CompletableFuture<HttpResponse<String>> completableFuture = client
-                .sendAsync(request, HttpResponse.BodyHandlers.ofString());
-            HttpResponse<String> response = completableFuture.join();
-            server.Stop();
-            org.assertj.core.api.Assertions.assertThat(response.statusCode()).isEqualTo(404);
-            org.assertj.core.api.Assertions.assertThat(response.body()).isEqualTo("<h1>404 Not Found</h1>Wrong method for request");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    void testPingHandler_with_wrong_method () throws IOException {
+        SimpleHttpServer server = new SimpleHttpServer("9322");
+        server.Start();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:9322/ping"))
+            .header("Content-Type", "text/plain; charset=UTF-8")
+            .POST(HttpRequest.BodyPublishers.ofString("test"))
+            .build();
+        CompletableFuture<HttpResponse<String>> completableFuture = client
+            .sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = completableFuture.join();
+        server.Stop();
+        Assertions.assertEquals(response.statusCode(), 404);
+        Assertions.assertEquals(response.body(), "<h1>404 Not Found</h1>Wrong method for request");
     }
 }
