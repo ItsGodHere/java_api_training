@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.IllegalCharsetNameException;
 import java.util.concurrent.CompletableFuture;
 
 public class SimpleClientServer {
@@ -23,7 +24,7 @@ public class SimpleClientServer {
             throw new ArithmeticException("The number must be positive and greater than 0.");
         }
         if(!UrlUtil.useRegex(url)){
-            throw new IllegalArgumentException("Wrong url");
+            throw new IllegalCharsetNameException("Wrong url");
         }
         this.url = url;
         this.client = HttpClient.newHttpClient();
