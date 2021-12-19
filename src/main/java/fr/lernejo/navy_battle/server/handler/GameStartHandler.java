@@ -31,12 +31,17 @@ public class GameStartHandler implements CallHandler {
             exchange.sendResponseHeaders(404, body.length());
         } else {
             JsonUtil util = new JsonUtil();
-            if(util.schemaValidate( new String(exchange.getRequestBody().readAllBytes()) )) {
-                body = util.createResponseBody(new URL("http://"+exchange.getRequestHeaders().getFirst("Host")),
-                    "May the fate be with you");
-                exchange.sendResponseHeaders(202, body.length());
+            if (exchange.getRequestHeaders().get("Content-Type").toString().equals("[application/json]")) {
+                if(util.schemaValidate( new String(exchange.getRequestBody().readAllBytes()) )) {
+                    body = util.createResponseBody(new URL("http://"+exchange.getRequestHeaders().getFirst("Host")),
+                        "May the fate be with you");
+                    exchange.sendResponseHeaders(202, body.length());
+                }else {
+                    body = "<h1>400 Bad Request</h1>";
+                    exchange.sendResponseHeaders(400, body.length());
+                }
             }else {
-                body = "<h1>400 Bad Request</h1>";
+                body = "<h1>400 Bad Content-Type</h1>";
                 exchange.sendResponseHeaders(400, body.length());
             }
         }
