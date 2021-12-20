@@ -28,15 +28,10 @@ public class FireHandler implements CallHandler{
         String body = "<h1>404 Not Found</h1>Wrong method for request";
         if (this.isMethodAllowed(exchange.getRequestMethod())) {
             final String cell = exchange.getRequestURI().toString().split( "=" )[1];
-            System.out.println("cell : " + cell);
             JsonUtil util = new JsonUtil();
             body = util.createFireRequestBody("sunk", true);
+            exchange.getResponseHeaders().set("Content-Type","application/json");
             exchange.sendResponseHeaders(202, body.length());
-        } else {
-            exchange.sendResponseHeaders(404, body.length());
-        }
-        try(OutputStream os = exchange.getResponseBody()){
-            os.write(body.getBytes());
-        }
-    }
+        } else { exchange.sendResponseHeaders(404, body.length()); }
+        try(OutputStream os = exchange.getResponseBody()){ os.write(body.getBytes()); }}
 }

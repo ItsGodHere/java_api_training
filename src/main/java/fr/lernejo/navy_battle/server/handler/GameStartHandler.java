@@ -27,26 +27,12 @@ public class GameStartHandler implements CallHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String body = "<h1>404 Not Found</h1>Wrong method for request";
-        if (this.isMethodAllowed(exchange.getRequestMethod())) {
-            final JsonUtil util = new JsonUtil();
+        if (this.isMethodAllowed(exchange.getRequestMethod())) { final JsonUtil util = new JsonUtil();
             if (exchange.getRequestHeaders().get("Content-Type").toString().equals("[application/json]")) {
-                if(util.schemaValidate( new String(exchange.getRequestBody().readAllBytes()) )) {
-                    body = util.createResponseBody(new URL("http://"+exchange.getRequestHeaders().getFirst("Host")),
-                        "May the fate be with you");
-                    exchange.sendResponseHeaders(202, body.length());
-                }else {
-                    body = "<h1>400 Bad Request</h1>";
-                    exchange.sendResponseHeaders(400, body.length());
-                }
-            }else {
-                body = "<h1>400 Bad Content-Type</h1>";
+                if(util.schemaValidate( new String(exchange.getRequestBody().readAllBytes()) )) { body = util.createResponseBody(new URL("http://"+exchange.getRequestHeaders().getFirst("Host")), "May the fate be with you");
+                    exchange.sendResponseHeaders(202, body.length()); }else { body = "<h1>400 Bad Request</h1>";
+                    exchange.sendResponseHeaders(400, body.length()); }}else { body = "<h1>400 Bad Content-Type</h1>";
                 exchange.sendResponseHeaders(400, body.length());
-            }
-        } else {
-            exchange.sendResponseHeaders(404, body.length());
-        }
-        try(OutputStream os = exchange.getResponseBody()){
-            os.write(body.getBytes());
-        }
-    }
-}
+            }} else { exchange.sendResponseHeaders(404, body.length()); }
+        try(OutputStream os = exchange.getResponseBody()){ os.write(body.getBytes()); }
+    }}

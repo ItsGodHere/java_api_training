@@ -2,6 +2,8 @@ package fr.lernejo.navy_battle.server;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 class SimpleHttpServerTest {
 
     private SimpleHttpServer server;
@@ -28,7 +30,7 @@ class SimpleHttpServerTest {
     }
 
     @Test
-    void test_server_setup () {
+    void test_server_setup () throws IOException {
         server = new SimpleHttpServer(port);
         org.assertj.core.api.Assertions.assertThatNoException()
             .isThrownBy(() -> server.Start());

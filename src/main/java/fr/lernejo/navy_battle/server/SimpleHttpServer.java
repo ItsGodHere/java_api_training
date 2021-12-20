@@ -13,23 +13,23 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 public class SimpleHttpServer {
-    private final int listening_port;
     private final List<CallHandler> contexts = new ArrayList<>();
-    private HttpServer server;
+    private final HttpServer server;
 
-    public SimpleHttpServer(String listening_port) {
+    public SimpleHttpServer(String listening_port) throws IOException {
+        int listening_port1;
         try {
-            this.listening_port = Integer.parseInt(listening_port);
+            listening_port1 = Integer.parseInt(listening_port);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("The port name must be a number.");
         }
-        if (this.listening_port <= 0) {
+        if (listening_port1 <= 0) {
             throw new ArithmeticException("The number must be positive and greater than 0.");
         }
+        this.server = HttpServer.create(new InetSocketAddress(listening_port1), 0);
     }
 
     public void Start () throws IOException {
-        this.server = HttpServer.create(new InetSocketAddress(this.listening_port), 0);
         server.setExecutor(Executors.newFixedThreadPool(1));
         this.contexts.add(new PingHandler());
         this.contexts.add((new GameStartHandler()));
