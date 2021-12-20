@@ -28,7 +28,7 @@ public class GameStartHandler implements CallHandler {
     public void handle(HttpExchange exchange) throws IOException {
         String body = "<h1>404 Not Found</h1>Wrong method for request";
         if (this.isMethodAllowed(exchange.getRequestMethod())) {
-            JsonUtil util = new JsonUtil();
+            final JsonUtil util = new JsonUtil();
             if (exchange.getRequestHeaders().get("Content-Type").toString().equals("[application/json]")) {
                 if(util.schemaValidate( new String(exchange.getRequestBody().readAllBytes()) )) {
                     body = util.createResponseBody(new URL("http://"+exchange.getRequestHeaders().getFirst("Host")),

@@ -12,11 +12,11 @@ import java.util.UUID;
 
 public class JsonUtil {
     public boolean schemaValidate(String data) throws IOException {
-        JSONObject jsonSchema = new JSONObject(
+        final JSONObject jsonSchema = new JSONObject(
             new JSONTokener(new FileInputStream(
                 new File("src/main/resources/GameStart.json").getAbsolutePath())));
         JSONObject jsonData = new JSONObject( new JSONTokener(data) );
-        Schema schemaValidator = SchemaLoader.load(jsonSchema);
+        final Schema schemaValidator = SchemaLoader.load(jsonSchema);
         try {
             schemaValidator.validate(jsonData);
             return true;
@@ -26,7 +26,7 @@ public class JsonUtil {
     }
 
     public String createResponseBody(URL url, String message) {
-        JSONObject responseBody = new JSONObject();
+        final JSONObject responseBody = new JSONObject();
         responseBody.put("id", UUID.randomUUID().toString());
         responseBody.put("url", url.toString());
         responseBody.put("message", message);
@@ -34,7 +34,7 @@ public class JsonUtil {
     }
 
     public String createFireRequestBody(String consequence, boolean isShipLeft) {
-        JSONObject responseBody = new JSONObject();
+        final JSONObject responseBody = new JSONObject();
         responseBody.put("consequence", consequence);
         responseBody.put("shipLeft", isShipLeft);
         return responseBody.toString();
